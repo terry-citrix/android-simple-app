@@ -5,6 +5,7 @@ A very simple app that launches a web view to a URL. This is designed to be a "s
 # Citrix MAM SDK
 
 To take this simple app and make it managed by Citrix Endpoint Management via the MAM SDK follow these steps.
+These steps are taken from https://developer.cloud.com/citrixworkspace/mobile-application-integration/android-native/docs/setting-up-the-library
 
 ## Add Properties to build.gradle
 
@@ -71,7 +72,7 @@ android {
         applicationId "com.terry.androidsimpleapp"
 ```
 
-# Add Signing Config
+## Add Signing Configuration
 
 Add the following to the **android -> signingConfigs** and **android -> buildTypes** sections in `app/build.gradle` (not the root `build.gradle`):
 
@@ -163,4 +164,9 @@ task generateMdx(type: Exec, dependsOn: [downloadTools]) {
 
 build.finalizedBy generateMdx
 ```
+
+## Check Your Build
+
+Compile the project and make sure that you don't have any errors. Confirm that you see a MDX file
+generated in the `app/build/outputs/apk/release` folder.
 
