@@ -15,7 +15,7 @@ Add these properties to your root `build.gradle` file.
 ext {
     mamSdkLibraryMaven="https://raw.githubusercontent.com/citrix/citrix-mam-sdks/main/maven"
     mamSdkLibraryTools="https://github.com/citrix/citrix-mam-sdks/raw/main/tools/java"
-    mamSdkVersion="21.7.0"
+    mamSdkVersion="21.6.0.+"
     appPackageName="com.terry.androidsimpleapp"
     
     keyStorePath="../mvpntest.keystore"
