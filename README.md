@@ -15,7 +15,7 @@ Add these properties to your root `build.gradle` file.
 ext {
     mamSdkLibraryMaven="https://raw.githubusercontent.com/citrix/citrix-mam-sdks/main/maven"
     mamSdkLibraryTools="https://github.com/citrix/citrix-mam-sdks/raw/main/tools/java"
-    mamSdkVersion="21.7.0"
+    mamSdkVersion="21.6.0.+"
     appPackageName="com.terry.androidsimpleapp"
     
     keyStorePath="../mvpntest.keystore"
@@ -169,4 +169,112 @@ build.finalizedBy generateMdx
 
 Compile the project and make sure that you don't have any errors. Confirm that you see a MDX file
 generated in the `app/build/outputs/apk/release` folder.
+
+## Add a new TunnelHandler class
+
+There are multiple ways to proceed, but we'll be following the model that the sample app source code
+does. We create a `TunnelHandler` class to hold the `handleMessage` logic.
+
+```java
+package com.terry.androidsimpleapp;
+
+import android.os.Message;
+import com.citrix.mvpn.api.MvpnDefaultHandler;
+
+public class TunnelHandler extends MvpnDefaultHandler {
+    private final Callback callback;
+
+    public interface Callback {
+        void onTunnelStarted();
+        void onError(boolean isSessionExpired);
+    }
+
+    public TunnelHandler(Callback callback) {
+        this.callback = callback;
+    }
+
+    @Override
+    public void handleMessage(Message msg) {
+        super.handleMessage(msg);
+
+        if (callback != null) {
+            if (isNetworkTunnelRunning()) {
+                callback.onTunnelStarted();
+            } else {
+                callback.onError(isSessionExpired());
+            }
+        }
+    }
+}
+```
+
+## Modify MainActivity
+
+We're going to modify the `MainActivity` with some code to start the tunnel when the view gets created.
+We start by creating a variable for the `TunnelHandler` that we created, but as a 
+`MvpnDefaultHandler` type.
+
+```java
+    private MvpnDefaultHandler mvpnHandler;
+```
+
+We then modify `onCreate` and add the following:
+
+```java
+        if (mvpnHandler == null) {
+            mvpnHandler = new TunnelHandler(this);
+        }
+        Log.i(TAG, "Before calling startTunnel()");
+        try {
+            MicroVPNSDK.startTunnel(this, new Messenger(mvpnHandler));
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to start tunnel: " + e.getMessage());
+        }
+```
+
+Now we need to implement an interface:
+
+```java
+public class MainActivity extends AppCompatActivity implements TunnelHandler.Callback {
+```
+
+And then fill in the missing method implementations:
+
+```java
+    @Override
+    public void onTunnelStarted() {
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Started tunnel!", Toast.LENGTH_LONG).show();
+        });
+    }
+
+    @Override
+    public void onError(boolean isSessionExpired) {
+        runOnUiThread(() -> {
+            Toast.makeText(this, "Error with tunnel!", Toast.LENGTH_LONG).show();
+        });
+    }
+```
+
+## Modify WebView
+
+In this example we use a WebView, and so we'll be modifying the code that creates the WebView.
+
+```
+    WebView webView = findViewById(R.id.idWebView);
+    try {
+        WebViewClient webviewClient = new WebViewClient();
+        webView.setWebViewClient(webviewClient);
+        webView = MicroVPNSDK.enableWebViewObjectForNetworkTunnel(this, webView, webviewClient);
+        webView.loadUrl(url);
+    } catch(NetworkTunnelNotStartedException nse) {
+        Log.e(TAG, "TunnelNotStarted: " + nse.getMessage());
+    } catch(MvpnException e) {
+        Log.e(TAG, "Mvpn Error: " + e.getMessage());
+    }
+```
+
+## Build and test on a device with Secure Hub
+
+Compile your code and run it on an actual Android device that has been enrolled.
 
