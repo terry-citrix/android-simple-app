@@ -165,9 +165,28 @@ task generateMdx(type: Exec, dependsOn: [downloadTools]) {
 build.finalizedBy generateMdx
 ```
 
+## Modify AndroidManifest.xml
+
+In the `application` section add the following:
+
+```xml
+    <uses-library android:name="org.apache.http.legacy" android:required="false" />
+```
+
+And assuming you are targeting Android SDK API level 30 or above then also add the following to the 
+root `manifest` section:
+
+```xml
+    <queries>
+        <package android:name="com.zenprise" />
+        <package android:name="com.citrix.Receiver" />
+    </queries>
+```
+
 ## Check Your Build
 
-Compile the project and make sure that you don't have any errors. Confirm that you see a MDX file
+Compile the project and make sure that you don't have any errors. At a command line do a clean build 
+(on macOS with Gradle: `./gradlew clean build`) and confirm that you see a MDX file
 generated in the `app/build/outputs/apk/release` folder.
 
 ## Add a new TunnelHandler class
