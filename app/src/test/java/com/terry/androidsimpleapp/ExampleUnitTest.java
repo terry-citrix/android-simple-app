@@ -1,4 +1,4 @@
-package com.terry.androidsimpleapp;
+package com.terryd.androidsimpleapp;
 
 import org.junit.Test;
 
