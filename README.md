@@ -16,7 +16,7 @@ ext {
     mamSdkLibraryMaven="https://raw.githubusercontent.com/citrix/citrix-mam-sdks/main/maven"
     mamSdkLibraryTools="https://github.com/citrix/citrix-mam-sdks/raw/main/tools/java"
     mamSdkVersion="21.6.0.+"
-    appPackageName="com.terry.androidsimpleapp"
+    appPackageName="com.terryd.androidsimpleapp"
     
     keyStorePath="../mvpntest.keystore"
     keystorePassword="Hello123"
@@ -69,7 +69,7 @@ Add the following to the **android -> defaultConfig** section in `app/build.grad
 ```groovy
 android {
     defaultConfig {
-        applicationId "com.terry.androidsimpleapp"
+        applicationId "com.terryd.androidsimpleapp"
 ```
 
 ## Add Signing Configuration
@@ -195,7 +195,7 @@ There are multiple ways to proceed, but we'll be following the model that the sa
 does. We create a `TunnelHandler` class to hold the `handleMessage` logic.
 
 ```java
-package com.terry.androidsimpleapp;
+package com.terryd.androidsimpleapp;
 
 import android.os.Message;
 import com.citrix.mvpn.api.MvpnDefaultHandler;
