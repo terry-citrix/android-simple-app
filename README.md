@@ -1,6 +1,10 @@
 # android-simple-app
 
-A very simple app that launches a web view to a URL. This is designed to be a "starter" app.
+A simple app that launches a web view to a URL.
+
+It was presented at the **How to implement the MAM SDK for Android** webinar on July 15th 2021. It is
+not officially supported by Citrix, and is presented as-is.  The officially supported sample app
+provided by Citrix is available on GitHub at https://github.com/citrix/citrix-mam-sdk-sample-browser-app-android-java
 
 # Citrix MAM SDK
 
